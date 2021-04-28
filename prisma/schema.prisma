@@ -8,8 +8,16 @@ generator db {
 }
 
 model User {
-    id    String @id @default(uuid())
-    email String @unique
+    id            String  @id @default(uuid())
+    email         String  @unique
+    emailVerified Boolean @default(false)
+    givenName     String
+    familyName    String?
+    picture       String?
+}
+
+model Roles {
+    id Int @id @default(autoincrement())
 }
 
 model Permission {
