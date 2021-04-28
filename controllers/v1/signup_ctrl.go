@@ -1,11 +1,15 @@
-package v1Controller
+package V1Contoller
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-type SignupController struct{}
+	"github.com/gin-gonic/gin"
+)
 
-func (ctrl SignupController) Signup(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"test": "data",
-	})
+type V1Contoller struct{}
+
+func (h V1Contoller) Signup(c *gin.Context) {
+	data := c.Request.Body
+
+	c.JSON(http.StatusOK, gin.H{"data": data})
 }

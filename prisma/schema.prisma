@@ -14,10 +14,13 @@ model User {
     givenName     String
     familyName    String?
     picture       String?
+    roles         Roles[]
 }
 
 model Roles {
-    id Int @id @default(autoincrement())
+    id     Int     @id @default(autoincrement())
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String?
 }
 
 model Permission {
