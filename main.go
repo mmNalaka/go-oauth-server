@@ -1,33 +1,25 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"go-auth-server/middlewares"
+	"go-auth-server/routers"
+
+	"github.com/gin-gonic/gin"
+)
+
+var router *gin.Engine
 
 func main() {
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 
-	apiv1 := r.Group("api/v1")
+	// Setup middlewares
+	r.Use(middlewares.RequestIdMiddleware())
 
-	apiv1.POST("/signup", func(c *gin.Context) {
-		data := c.Request.Body
-		print(data)
+	// Init routers
+	v1 := r.Group("/v1")
 
-		c.JSON(200, gin.H{
-			"_id":            "58457fe6b27...",
-			"email_verified": false,
-			"email":          "test.account@signup.com",
-			"username":       "johndoe",
-			"given_name":     "John",
-			"family_name":    "Doe",
-			"name":           "John Doe",
-			"nickname":       "johnny",
-			"picture":        "http://example.org/jdoe.png",
-		})
-	})
+	routers.InitCommonRouter(r)
+	routers.InitV1Router(v1)
 
 	r.Run()
 }
