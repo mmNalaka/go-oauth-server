@@ -1,0 +1,109 @@
+_id: spc_b8fb0df87a03465b91d3a8b2a7acc4e7
+type: ApiSpec
+parentId: wrk_bc454baae1194c9d9360b3e6776e5aef
+modified: 1624226589599
+created: 1624226222637
+fileName: auth-go
+contents: >-
+  openapi: 3.0.0
+
+
+  info:
+    title: oauth-go API
+    description: oauth-go is an open-source authentication and authorization server providing authentication and authorization for your applications via a web portal.
+    contact:
+      name: Auth-go docs
+      url: https://github.com/authelia/authelia#contact-options
+      email: team@authelia.com
+    license:
+      name: Apache 2.0
+      url: https://www.apache.org/licenses/LICENSE-2.0
+    version: 1.0.0
+
+    
+  tags:
+    - name: State
+      description: Configuration, health and state endpoints
+    - name: Authentication
+      description: Authentication and verification endpoints
+    - name: Password Reset
+      description: Password reset endpoints
+    - name: User Information
+      description: User configuration endpoints
+    - name: Second Factor
+      description: TOTP, U2F and Duo endpoints
+
+      
+  paths:
+    /api/configuration:
+      get:
+        tags:
+          - State
+        summary: Application Configuration
+        description: The configuration endpoint provides detailed information including available second factor methods, if any second factor policies exist and the TOTP period configuration.
+        responses:
+          "200":
+            description: Successful Operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/handlers.configuration.ConfigurationBody'
+          "403":
+            description: Forbidden
+        security:
+          - authelia_auth: [ ]
+
+     
+
+     
+  components:
+    parameters:
+      originalURLParam:
+        name: X-Original-URL
+        in: header
+        description: Redirection URL
+        required: true
+        style: simple
+        explode: true
+        schema:
+          type: string
+      forwardedMethodParam:
+        name: X-Forwarded-Method
+        in: header
+        description: Request Method
+        required: false
+        style: simple
+        explode: true
+        schema:
+          type: string
+          enum: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "TRACE", "CONNECT", "OPTIONS"]
+      authParam:
+        name: auth
+        in: query
+        description: Switch authorization header and prompt for basic auth
+        required: false
+        schema:
+          type: string
+          enum: ["basic"]
+    schemas:
+      handlers.configuration.ConfigurationBody:
+        type: object
+        properties:
+          status:
+            type: string
+            example: OK
+          data:
+            type: object
+            properties:
+              available_methods:
+                type: array
+                items:
+                  type: string
+                example: [totp, u2f, mobile_push]
+              second_factor_enabled:
+                type: boolean
+                description: If second factor is enabled.
+              totp_period:
+                type: integer
+                example: 30
+contentType: yaml
